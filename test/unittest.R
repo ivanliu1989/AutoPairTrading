@@ -37,3 +37,8 @@ expect_equal(half.life$half.life.round, 68)
 hedgeRatio <- HedgeRatioOLS(AUDUSD, CADUSD)
 expect_equal(names(hedgeRatio), c("alpha","beta"))
 hedgeRatio <- HedgeRatioOLS(AUDUSD, CADUSD, FALSE)
+
+
+# 7. Unit Test - HurstExponentTest() --------------------------------------
+hurst <- HurstExponentTest(AUDUSD/CADUSD, 20)
+expect_equal(length(hurst$hurstKY), length(AUDUSD))

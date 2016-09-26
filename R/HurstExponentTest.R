@@ -6,21 +6,31 @@
 #' The closer the value is to 0 implies greater levels of mean-reversion.
 #'
 #' @param y Vector to be tested for a unit root.
-#' @param type Test type, either "none", "drift" or "trend".
-#' @param lags Number of lags for endogenous variable to be included.
+#' @param lookback number of perioed to look back for testing
 #'
-#' @return A \code{list} of ADF test results
+#' @return A \code{list} of hurst test results
 #'
 #' @examples
-#' data(Raotbl3)
-#' attach(Raotbl3)
-#' lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-#' summary(lc.df)
+#' getFX("AUD/USD")
+#' getFX("CAD/USD")
+#' HurstExponentTest(AUDUSD/CADUSD, 20)
 #'
-#' @import urca
 #' @export
-HurstExponentTest <- function(y, type, lags){
-  library(urca)
-  lc.df <- ur.df(y=y, lags=lags, type=type)
-  return(lc.df)
+HurstExponentTest <- function(y, lookback){
+
+  retY <- ROC(y, n=1, type="discrete")
+  retY[is.na(retY)] <- 0
+  hurstKY <- apply.rolling(retY, FUN="HurstK", width = lookback)
+
+  serialcorr <- runCor(cbind(coredata(hurstKY)),cbind(index(hurstKY)),n=lookback)
+  serialcorr <- as.xts(serialcorr,order.by=index(hurstKY))
+  autoreg <- runCor(hurstKY,lag(hurstKY,k=1),n=lookback)
+  colnames(serialcorr) <- "SerialCorrelation"
+  colnames(autoreg) <- "AutoRegression"
+
+
+  res <- list(
+    hurstKY = hurstKY
+  )
+  return(res)
 }

@@ -20,10 +20,9 @@ A \code{list} of hedge ratio (beta, risk) and alpha (risk free profits)
 Calculate Hedge Ratio by using OLS
 }
 \examples{
-data(Raotbl3)
-attach(Raotbl3)
-lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-summary(lc.df)
+getFX("AUD/USD")
+getFX("CAD/USD")
+HedgeRatioOLS(AUDUSD, CADUSD)
 
 }
 

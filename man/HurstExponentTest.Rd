@@ -4,17 +4,15 @@
 \alias{HurstExponentTest}
 \title{Hurst Exponent Test}
 \usage{
-HurstExponentTest(y, type, lags)
+HurstExponentTest(y, lookback)
 }
 \arguments{
 \item{y}{Vector to be tested for a unit root.}
 
-\item{type}{Test type, either "none", "drift" or "trend".}
-
-\item{lags}{Number of lags for endogenous variable to be included.}
+\item{lookback}{number of perioed to look back for testing}
 }
 \value{
-A \code{list} of ADF test results
+A \code{list} of hurst test results
 }
 \description{
 Effectively this returns a value between 0 and 1 that tells you whether a time-series is trending or mean-reverting.
@@ -23,10 +21,9 @@ Values below 0.5 imply the time-series is mean-reverting, and above 0.5 imply tr
 The closer the value is to 0 implies greater levels of mean-reversion.
 }
 \examples{
-data(Raotbl3)
-attach(Raotbl3)
-lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-summary(lc.df)
+getFX("AUD/USD")
+getFX("CAD/USD")
+HurstExponentTest(AUDUSD/CADUSD, 20)
 
 }
 

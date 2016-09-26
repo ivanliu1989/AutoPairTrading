@@ -9,10 +9,9 @@
 #' @return A \code{list} of hedge ratio (beta, risk) and alpha (risk free profits)
 #'
 #' @examples
-#' data(Raotbl3)
-#' attach(Raotbl3)
-#' lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-#' summary(lc.df)
+#' getFX("AUD/USD")
+#' getFX("CAD/USD")
+#' HedgeRatioOLS(AUDUSD, CADUSD)
 #'
 #' @export
 HedgeRatioOLS <- function(y, x, add_const = TRUE){
