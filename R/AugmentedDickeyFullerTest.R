@@ -21,9 +21,7 @@ AugmentedDickeyFullerTest <- function(y, type = "drift", lags = 1){
   lc.df <- summary(ur.df(y=y, lags=lags, type=type))
   z.lag.1 <- lc.df@testreg$coefficients["z.lag.1","t value"]
   tau2 <- lc.df@cval[1,]
-  signif <- ifelse((z.lag.1 <= tau2["5pct"] & z.lag.1 <= tau2["10pct"]) | (z.lag.1 >= tau2["5pct"] & z.lag.1 >= tau2["10pct"]), "<5",
-                   ifelse((z.lag.1 <= tau2["5pct"] & z.lag.1 >= tau2["10pct"]) | (z.lag.1 <= tau2["5pct"] & z.lag.1 >= tau2["10pct"]),
-                          "5-10", ">10"))
+  signif <- ifelse(z.lag.1 <= tau2["1pct"], 1, ifelse(z.lag.1 <= tau2["5pct"], 5, ifelse(z.lag.1 <= tau2["10pct"], 10, 99)))
   return(list(res = lc.df,
               z.lag.1 = z.lag.1,
               tau2 = tau2,

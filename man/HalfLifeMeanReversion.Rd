@@ -4,27 +4,23 @@
 \alias{HalfLifeMeanReversion}
 \title{Half-Life Mean-Reversion}
 \usage{
-HalfLifeMeanReversion(y, type, lags)
+HalfLifeMeanReversion(price.Ratio)
 }
 \arguments{
-\item{y}{Vector to be tested for a unit root.}
-
-\item{type}{Test type, either "none", "drift" or "trend".}
-
-\item{lags}{Number of lags for endogenous variable to be included.}
+\item{price.Ratio}{price ratio between pairs}
 }
 \value{
-A \code{list} of ADF test results
+A \code{list} of half life results
 }
 \description{
 Computed from an Ornstein–Uhlenbeck process. This is the theoretically computed time, based on a historical window of data,
 that it will take for the spread to mean-revert half of its distance after having diverged from the mean of the spread.
 }
 \examples{
-data(Raotbl3)
-attach(Raotbl3)
-lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-summary(lc.df)
+getFX("AUD/USD")
+getFX("CAD/USD")
+half.life <- HalfLifeMeanReversion(AUDUSD/CADUSD)
+half.life
 
 }
 

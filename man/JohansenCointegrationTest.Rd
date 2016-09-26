@@ -4,27 +4,29 @@
 \alias{JohansenCointegrationTest}
 \title{Johansen Cointegration Test}
 \usage{
-JohansenCointegrationTest(y, type, lags)
+JohansenCointegrationTest(x, type = "trace", ecdet = "none", K = 2)
 }
 \arguments{
-\item{y}{Vector to be tested for a unit root.}
+\item{x}{Data matrix to be investigated for cointegration.}
 
-\item{type}{Test type, either "none", "drift" or "trend".}
+\item{type}{The test to be conducted, either ‘eigen’ or ‘trace’.}
 
-\item{lags}{Number of lags for endogenous variable to be included.}
+\item{ecdet}{Character, ‘none’ for no intercept in cointegration, ‘const’ for constant term in cointegration and ‘trend’ for trend variable in cointegration.}
+
+\item{K}{The lag order of the series (levels) in the VAR.}
 }
 \value{
-A \code{list} of ADF test results
+A \code{list} of Johansen Cointegration test results
 }
 \description{
 Conducts the Johansen procedure on a given data set.
 The "trace" or "eigen" statistics are reported and the matrix of eigenvectors as well as the loading matrix.
 }
 \examples{
-data(Raotbl3)
-attach(Raotbl3)
-lc.df <- AugmentedDickeyFullerTest(y=lc, lags=3, type='trend')
-summary(lc.df)
+getFX("AUD/USD")
+getFX("CAD/USD")
+res <- JohansenCointegrationTest(merge(AUDUSD, CADUSD), type = "trace", ecdet = "none", K = 2)
+res
 
 }
 

@@ -3,6 +3,7 @@
 export(AugmentedDickeyFullerTest)
 export(CorrelationTest)
 export(HalfLifeMeanReversion)
+export(HedgeRatioOLS)
 export(HurstExponentTest)
 export(InitializeContext)
 export(JohansenCointegrationTest)
