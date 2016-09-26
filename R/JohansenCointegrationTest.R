@@ -18,6 +18,7 @@
 #' @import urca
 #' @export
 JohansenCointegrationTest <- function(y, type, lags){
+  library(urca)
   lc.df <- ur.df(y=y, lags=lags, type=type)
   return(lc.df)
 }

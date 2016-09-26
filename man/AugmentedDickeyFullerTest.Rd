@@ -4,7 +4,7 @@
 \alias{AugmentedDickeyFullerTest}
 \title{Augmented Dickey Fuller Test}
 \usage{
-AugmentedDickeyFullerTest(y, type, lags)
+AugmentedDickeyFullerTest(y, type = "drift", lags = 1)
 }
 \arguments{
 \item{y}{Vector to be tested for a unit root.}

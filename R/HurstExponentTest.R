@@ -20,6 +20,7 @@
 #' @import urca
 #' @export
 HurstExponentTest <- function(y, type, lags){
+  library(urca)
   lc.df <- ur.df(y=y, lags=lags, type=type)
   return(lc.df)
 }

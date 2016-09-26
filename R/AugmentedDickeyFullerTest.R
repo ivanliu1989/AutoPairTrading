@@ -16,7 +16,17 @@
 #'
 #' @import urca
 #' @export
-AugmentedDickeyFullerTest <- function(y, type, lags){
-  lc.df <- ur.df(y=y, lags=lags, type=type)
-  return(lc.df)
+AugmentedDickeyFullerTest <- function(y, type = "drift", lags = 1){
+  library(urca)
+  lc.df <- summary(ur.df(y=y, lags=lags, type=type))
+  z.lag.1 <- lc.df@testreg$coefficients["z.lag.1","t value"]
+  tau2 <- lc.df@cval[1,]
+  signif <- ifelse((z.lag.1 <= tau2["5pct"] & z.lag.1 <= tau2["10pct"]) | (z.lag.1 >= tau2["5pct"] & z.lag.1 >= tau2["10pct"]), "<5",
+                   ifelse((z.lag.1 <= tau2["5pct"] & z.lag.1 >= tau2["10pct"]) | (z.lag.1 <= tau2["5pct"] & z.lag.1 >= tau2["10pct"]),
+                          "5-10", ">10"))
+  return(list(res = lc.df,
+              z.lag.1 = z.lag.1,
+              tau2 = tau2,
+              signif = signif))
 }
+
