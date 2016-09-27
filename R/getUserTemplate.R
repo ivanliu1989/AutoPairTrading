@@ -79,7 +79,18 @@ plot(dt.summary$real.capital)
 # 2. Dynamic HalfLife
 # 3. KalmanFilter as an alternative to Hedge Ratio update
 # 4. Implement more complicated Strategy Creation
+#    4.1 Interest Rates
+#    4.2 Commodity
+#    4.3 Partner countries
+#    4.4 VIR
+#    4.5 Sentiment
+#    4.6 Machine learning scoring
+#    4.7 etc.
 # 5. Dashboard of Strategy Performance
+# 6. Detailed Statistical Report
+# 7. Implement Stop-Loss
+# 8. Implement Multi-entry & Multi-exit
+# 9. Replace Close-price with Bid/Buy from IB API
 ")
 }
 
