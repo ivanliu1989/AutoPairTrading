@@ -63,10 +63,3 @@ findCointegratedPairs <- function(data){
   }
 }
 
-
-visualizeCointegration <- function(y,x){
-  ratios <- y/x
-  ratios.z <- zscores(ratios)
-  ratios.z
-  chart.TimeSeries()
-}

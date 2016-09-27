@@ -30,7 +30,9 @@ HurstExponentTest <- function(y, lookback){
 
 
   res <- list(
-    hurstKY = hurstKY
+    hurstKY = hurstKY,
+    serialcorr = serialcorr,
+    autoreg = autoreg
   )
   return(res)
 }
