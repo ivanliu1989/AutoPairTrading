@@ -7,6 +7,7 @@
 #'
 #' @export
 getUserTemplate <- function(){
+  sink("getUserTemplate.R")
   cat(
 "
 # 0. Env setup ------------------------------------------------------------
@@ -98,6 +99,9 @@ basic.report
 # 8. Implement Multi-entry & Multi-exit
 # 9. Replace Close-price with Bid/Buy from IB API
 ")
+
+  sink()
+  file.edit("getUserTemplate.R")
 }
 
 
