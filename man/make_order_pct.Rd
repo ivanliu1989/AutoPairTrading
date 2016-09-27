@@ -4,7 +4,8 @@
 \alias{make_order_pct}
 \title{Make Orders based on Portfolio Percent}
 \usage{
-make_order_pct(initial.capital, capital, holdings, prices, shares)
+make_order_pct(initial.capital, capital, holdings, prices, current.shares, pct,
+  brokerage = 0.01)
 }
 \arguments{
 \item{initial.capital}{total capital to invest}
@@ -15,7 +16,11 @@ make_order_pct(initial.capital, capital, holdings, prices, shares)
 
 \item{prices}{current prices of symbol}
 
-\item{shares}{percent of total portfolio to invest}
+\item{current.shares}{current number of units of symbol}
+
+\item{pct}{target percent of total portfolio to invest}
+
+\item{brokerage}{brokerage fees in percentage}
 }
 \value{
 A \code{list} of updated values for current status of the symbol

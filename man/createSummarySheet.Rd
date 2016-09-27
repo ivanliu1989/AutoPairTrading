@@ -4,12 +4,14 @@
 \alias{createSummarySheet}
 \title{Create a Summary Sheet for Backtesting}
 \usage{
-createSummarySheet(y, x)
+createSummarySheet(y, x, initial.capital)
 }
 \arguments{
 \item{y}{y series}
 
 \item{x}{x series}
+
+\item{initial.capital}{initial capital}
 }
 \value{
 A \code{data.frame}

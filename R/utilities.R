@@ -89,32 +89,37 @@ computeHoldingsPct <- function(y.shares, x.shares, y.price, x.price){
 #' @param capital current capital in hand
 #' @param holdings current holdings in dollar values for symbol
 #' @param prices current prices of symbol
-#' @param shares percent of total portfolio to invest
+#' @param current.shares current number of units of symbol
+#' @param pct target percent of total portfolio to invest
+#' @param brokerage brokerage fees in percentage
 #'
 #' @return A \code{list} of updated values for current status of the symbol
 #'
 #' @export
-make_order_pct <- function(initial.capital, capital, holdings, prices, shares){
+make_order_pct <- function(initial.capital, capital, holdings, prices, current.shares, pct, brokerage = 0.01){
   initial.capital = as.numeric(initial.capital)
   capital = as.numeric(capital)
   holdings = as.numeric(holdings)
   prices = as.numeric(prices)
-  shares = as.numeric(shares)
+  pct = as.numeric(pct)
+  current.shares = as.numeric(current.shares)
 
-  order_dollars = initial.capital * shares
-  order_num = round(order_dollars / prices / 100) * 100
+  order_dollars = initial.capital * pct
+  order_num = round(order_dollars / prices / 100) * 100 - current.shares
+  brokerage = order_num * brokerage
   # 1. update capital
-  capital = capital - prices * order_num
+  capital = capital - prices * order_num - brokerage
   # 2. update holding
   holdings = holdings + prices * order_num
   # 3. shares
-  shares = shares + order_num
+  shares = current.shares + order_num
 
   res = list(
     capital = capital,
     holdings = holdings,
     prices = prices,
-    shares = shares
+    shares = shares,
+    brokerage = brokerage
   )
   return(res)
 }
@@ -132,7 +137,7 @@ make_order_pct <- function(initial.capital, capital, holdings, prices, shares){
 #'
 #' @export
 createSummarySheet <- function(y, x, initial.capital){
-  dt.summary <- merge(y,x)
+  dt.summary <- as.data.frame(merge(y,x))
   colnames(dt.summary) <- c("y.prices", "x.prices")
   dt.summary$in_short = FALSE
   dt.summary$in_long = FALSE
@@ -144,6 +149,9 @@ createSummarySheet <- function(y, x, initial.capital){
   dt.summary$hedgeRatio = 0
   dt.summary$long.pos = 0
   dt.summary$short.pos = 0
+  dt.summary$brokerage = 0
+  dt.summary$real.capital = 0
+  dt.summary$trade = "NO Trade"
 
   return(dt.summary)
 }
