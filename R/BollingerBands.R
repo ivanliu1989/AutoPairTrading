@@ -21,7 +21,11 @@ BollingerBands <- function(y, lookback = 20, std = 2){
   mlowBB = maverage - std * mstd
   mhighBB = maverage + std * mstd
 
-  BBbands = data.frame(y = y, ma = maverage, mstd = mstd, BBhigh = mhighBB, BBlow = mlowBB)
-
+  BBbands = data.frame(y = y,
+                       ma = maverage,
+                       mstd = mstd,
+                       BBhigh = mhighBB,
+                       BBlow = mlowBB)
+  colnames(BBbands) <- c("spread", "ma", "mstd", "BBhigh", "BBlow")
   return(BBbands)
 }
