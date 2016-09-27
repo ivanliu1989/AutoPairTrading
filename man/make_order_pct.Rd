@@ -5,7 +5,7 @@
 \title{Make Orders based on Portfolio Percent}
 \usage{
 make_order_pct(initial.capital, capital, holdings, prices, current.shares, pct,
-  brokerage = 0.01)
+  brokerage = 0.001)
 }
 \arguments{
 \item{initial.capital}{total capital to invest}

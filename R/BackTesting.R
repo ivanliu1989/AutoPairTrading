@@ -6,13 +6,15 @@
 #' @param x short series
 #' @param context trading context
 #' @param strategy a vector of trading indicator calculated by user's strategy
-#' @param goLong threshold for going long
-#' @param goShort threshold for going short
+#' @param goLong a vector of thresholds for going long
+#' @param goShort a vector of thresholds for going short
 #'
 #' @return A \code{data.frame} with trading activities
 #'
+#' @seealso \link{getUserTemplate}
+#'
 #' @export
-BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
+BackTesting <- function(y, x, context, strategy, goLong, goShort, exitPoint){
   dt.summary <- createSummarySheet(y,x, context$capital)
   in_short = FALSE
   in_long = FALSE
@@ -20,6 +22,9 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
   for(i in (half.life+1):nrow(y)){
     # create strategy indicator
     indicator <- as.numeric(strategy[i-1])
+    exitTrigger <- as.numeric(exitPoint[i-1])
+    longTrigger <- as.numeric(goLong[i-1])
+    shortTrigger <- as.numeric(goShort[i-1])
 
     # calculate hedge ratio
     hedgeRatio <- HedgeRatioOLS(y[(i-half.life):(i-1)],
@@ -27,13 +32,13 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
 
     if(i == nrow(dt.summary)){
       # Update numbers
-      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], 0, 0.01)
+      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], 0, context$brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], 0, 0.01)
+      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], 0, context$brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
       dt.summary$x.shares[i] = x_order_update$shares
@@ -45,16 +50,16 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
       dt.summary$short.pos[i] = 0
       dt.summary$trade[i] = "Exit"
 
-    }else if((in_short & indicator < 0) | (in_long & indicator > 0)){
+    }else if((in_short & indicator < exitTrigger) | (in_long & indicator > exitTrigger)){
       # Update numbers
-      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], 0, 0.01)
+      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], 0, context$brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], 0, 0.01)
+      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], 0, context$brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -67,7 +72,7 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
       dt.summary$short.pos[i] = 0
       dt.summary$trade[i] = "Exit"
 
-    }else if(!in_long & indicator < goLong){
+    }else if(!in_long & indicator < longTrigger){
       # Only trade if NOT already in a trade
       y_target_shares = 1
       x_target_shares = -hedgeRatio$beta
@@ -77,14 +82,14 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], target_pct[1], 0.01)
+      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], target_pct[1], context$brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], target_pct[2], 0.01)
+      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], target_pct[2], context$brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -96,7 +101,7 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
       dt.summary$short.pos[i] = -1
       dt.summary$trade[i] = "Go Long"
 
-    }else if(!in_short & indicator > goShort){
+    }else if(!in_short & indicator > shortTrigger){
       # Only trade if NOT already in a trade
       y_target_shares = -1
       x_target_shares = hedgeRatio$beta
@@ -106,14 +111,14 @@ BackTesting <- function(y, x, context, strategy, goLong = -1, goShort = 1){
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], target_pct[1], 0.01)
+      y_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$y.holdings[i-1], dt.summary$y.prices[i], dt.summary$y.shares[i-1], target_pct[1], context$brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], target_pct[2], 0.01)
+      x_order_update <- make_order_pct(context$capital, dt.summary$capital[i], dt.summary$x.holdings[i-1], dt.summary$x.prices[i], dt.summary$x.shares[i-1], target_pct[2], context$brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings

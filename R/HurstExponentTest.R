@@ -16,8 +16,9 @@
 #' HurstExponentTest(AUDUSD/CADUSD, 20)
 #'
 #' @export
+#' @import FGN
 HurstExponentTest <- function(y, lookback){
-
+  library(FGN)
   retY <- ROC(y, n=1, type="discrete")
   retY[is.na(retY)] <- 0
   hurstKY <- apply.rolling(retY, FUN="HurstK", width = lookback)

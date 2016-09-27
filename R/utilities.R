@@ -96,7 +96,7 @@ computeHoldingsPct <- function(y.shares, x.shares, y.price, x.price){
 #' @return A \code{list} of updated values for current status of the symbol
 #'
 #' @export
-make_order_pct <- function(initial.capital, capital, holdings, prices, current.shares, pct, brokerage = 0.01){
+make_order_pct <- function(initial.capital, capital, holdings, prices, current.shares, pct, brokerage = 0.001){
   initial.capital = as.numeric(initial.capital)
   capital = as.numeric(capital)
   holdings = as.numeric(holdings)
@@ -106,7 +106,7 @@ make_order_pct <- function(initial.capital, capital, holdings, prices, current.s
 
   order_dollars = initial.capital * pct
   order_num = round(order_dollars / prices / 100) * 100 - current.shares
-  brokerage = order_num * brokerage
+  brokerage = abs(order_num * brokerage)
   # 1. update capital
   capital = capital - prices * order_num - brokerage
   # 2. update holding
@@ -154,4 +154,24 @@ createSummarySheet <- function(y, x, initial.capital){
   dt.summary$trade = "NO Trade"
 
   return(dt.summary)
+}
+
+
+#' Convert Summary sheet into data.table
+#'
+#' Convert Summary sheet into data.table
+#'
+#' @param dt summary trading sheet
+#'
+#' @return A \code{data.table}
+#'
+#' @export
+#' @import data.table
+setDataTable <- function(dt){
+  library(data.table)
+  dates <- rownames(dt)
+  dt <- setDT(dt)
+  dt[, Dates := as.IDate(dates)]
+
+  return(dt)
 }

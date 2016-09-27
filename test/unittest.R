@@ -89,7 +89,7 @@ BBbands <- BollingerBands(price.ratio, half.life, 2)
 
 # 9. Entry/Exit
 context <- InitializeContext(y, x, capital = 1e5, window = 20, lookback = 250, brokerage = 0.02, stoploss = 0.1)
-dt.summary <- BackTesting(y, x, context, zc.ma, 1, -1)
-dt.summary <- BackTesting(y, x, context, zc, 1, -1)
+dt.summary <- BackTesting(y, x, context, zc.ma, rep(1, length(x)), rep(-1, length(x)), rep(0, length(x)))
+dt.summary <- BackTesting(y, x, context, zc, rep(1, length(x)), rep(-1, length(x)), rep(0, length(x)))
 
 plot(dt.summary$real.capital)

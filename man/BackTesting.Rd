@@ -4,7 +4,7 @@
 \alias{BackTesting}
 \title{Back Testing Strategy}
 \usage{
-BackTesting(y, x, context, strategy, goLong = -1, goShort = 1)
+BackTesting(y, x, context, strategy, goLong, goShort, exitPoint)
 }
 \arguments{
 \item{y}{long series}
@@ -15,14 +15,17 @@ BackTesting(y, x, context, strategy, goLong = -1, goShort = 1)
 
 \item{strategy}{a vector of trading indicator calculated by user's strategy}
 
-\item{goLong}{threshold for going long}
+\item{goLong}{a vector of thresholds for going long}
 
-\item{goShort}{threshold for going short}
+\item{goShort}{a vector of thresholds for going short}
 }
 \value{
 A \code{data.frame} with trading activities
 }
 \description{
 Back Testing Strategy
+}
+\seealso{
+\link{getUserTemplate}
 }
 
