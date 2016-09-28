@@ -84,7 +84,7 @@ basic.report
 # 13. WIP -----------------------------------------------------------------
 # 1. Walkforward testing
 # 2. Dynamic HalfLife
-# 3. KalmanFilter as an alternative to Hedge Ratio update
+# 3. KalmanFilter as an alternative to update Hedge Ratio
 # 4. Implement more complicated Strategy Creation
 #    4.1 Interest Rates
 #    4.2 Commodity
@@ -94,10 +94,13 @@ basic.report
 #    4.6 Machine learning scoring
 #    4.7 etc.
 # 5. Dashboard of Strategy Performance
-# 6. Detailed Statistical Report
+# 6. Detailed Statistics Report
 # 7. Implement Stop-Loss & Minimum holding days
-# 8. Implement Multi-entry & Multi-exit
-# 9. Replace Close-price with Bid/Buy from IB API
+# 8. Allow Multi-entry & Multi-exit
+# 9. Replace Close-price with Bid/Bet from IB API for Long/Short
+# 10. Commisions Calculator & Expected Returns Optimisation
+# 11. Incorporate momentum signals
+# 12. https://github.com/artyyouth/r-quant
 ")
 
   sink()

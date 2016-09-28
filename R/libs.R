@@ -1,8 +1,0 @@
-library(quantmod)
-library(TTR)
-library(data.table)
-library(PearsonDS)
-library(PerformanceAnalytics)
-library(fUnitRoots)
-library(FGN)
-library(urca)

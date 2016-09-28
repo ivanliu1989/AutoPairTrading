@@ -13,7 +13,6 @@
 #' cor = CorrelationTest(AUDUSD, CADUSD)
 #' cor
 #'
-#' @import fBasics
 #' @export
 CorrelationTest <- function(x, y, method = "pearson"){
   library(fBasics)
