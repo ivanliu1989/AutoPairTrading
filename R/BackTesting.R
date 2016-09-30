@@ -145,6 +145,8 @@ BackTesting <- function(y, x, context, strategy, goLong, goShort, exitPoint){
     dt.summary$in_short[i] = in_short
     dt.summary$in_long[i] = in_long
     dt.summary$hedgeRatio[i] = hedgeRatio$beta
+    dt.summary$beta[i] = hedgeRatio$beta
+    dt.summary$alpha[i] = hedgeRatio$alpha
   }
 
   dt.summary$real.capital <- dt.summary$y.prices * dt.summary$y.shares + dt.summary$x.prices * dt.summary$x.shares + dt.summary$capital

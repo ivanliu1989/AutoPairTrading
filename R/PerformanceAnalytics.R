@@ -53,6 +53,7 @@ performanceReport <- function(dt.summary){
   tot.tradingdays <- round(sum(trade.details$trade.days[-length(trade.details$trade.days)]) * 252/365)
 
   res <- list(
+    trade.summary = dt.summary,
     trade.details = trade.details,
     avg.holdingdays = avg.holdingdays,
     avg.returns = avg.returns,

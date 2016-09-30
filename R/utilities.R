@@ -147,6 +147,8 @@ createSummarySheet <- function(y, x, initial.capital){
   dt.summary$y.shares = 0
   dt.summary$x.shares = 0
   dt.summary$hedgeRatio = 0
+  dt.summary$alpha = 0
+  dt.summary$beta = 0
   dt.summary$long.pos = 0
   dt.summary$short.pos = 0
   dt.summary$brokerage = 0
@@ -174,4 +176,31 @@ setDataTable <- function(dt){
   dt[, Dates := as.IDate(dates)]
 
   return(dt)
+}
+
+
+#' Get Price Ratio / Spreads between a Pair of Prices
+#'
+#' Get Price Ratio / Spreads between a Pair of Prices
+#'
+#' @param y y series
+#' @param x x series
+#' @param log log scaled or not
+#' @param spread return spread instead of price ratio
+#'
+#' @return A \code{vector} of price ratio OR spreads
+#'
+#' @export
+getPriceRatio <- function(y, x, log = TRUE, spread = FALSE){
+
+  if(spread){
+    p_ratio <- y-x
+  }else{
+    p_ratio <- (y/x)
+    p_ratio[is.infinite(p_ratio)] <- NA
+    p_ratio <- na.omit(p_ratio)
+    if(log) p_ratio <- log(p_ratio)
+  }
+
+  return(p_ratio)
 }

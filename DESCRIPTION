@@ -15,7 +15,9 @@ Imports: quantmod,
     PerformanceAnalytics,
     fUnitRoots,
     FGN,
-    urca
+    urca,
+    ggplot2,
+    mailR
 Suggests: knitr,
     rmarkdown,
     fBasics
