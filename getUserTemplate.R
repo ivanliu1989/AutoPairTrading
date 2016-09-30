@@ -3,6 +3,7 @@
 rm(list = ls()); gc()
 library(testthat)
 library(AutoPairTrading)
+library(TTR)
 
 
 # 1. Get Y, X and Price.Ratio ---------------------------------------------
@@ -64,7 +65,7 @@ plot(dt.summary$real.capital, type = "l")
 
 # 12. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
-performanceEvaluationEmail(basic.report, to = c("catwang89@gmail.com", "ivan.liuyanfeng@gmail.com"))
+performanceEvaluationEmail(basic.report, c("ivan.liuyanfeng@gmail.com"))
 
 # 13. WIP -----------------------------------------------------------------
 # 1. Walkforward testing

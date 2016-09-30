@@ -9,14 +9,17 @@
 #' @seealso \link{performanceReport}
 #'
 #' @export
-#' @import ggplot2
+#' @import xtable
 #' @import mailR
+#' @import data.table
 performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfeng@gmail.com"),
                                        path = "PerformanceEvaluation.pdf"){
-  library(ggplot2)
+  library(xtable)
+  library(data.table)
+
   redfocus = c("red","#6D6D6D", "#929292", "#B6B6B6")
   bluefocus = c("#084594", "#6D6D6D", "#929292", "#B6B6B6")
-  first.trade <- as.Date(performanceReport$trade.details$Dates[1])
+  first.trade <- as.Date(performanceReport$trade.details$Dates[1]-1)
   full.trades <- performanceReport$trade.summary[rownames(performanceReport$trade.summary)>=first.trade,]
 
   pdf(path, useDingbats=FALSE, width=8, height=9)
@@ -52,22 +55,25 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
 
   # 3. Scatter and density plots --------------------------------------------
   layout(matrix(c(1, 2, 3)), heights = c(1.5, 1.5, 1.5), widths = 1)
+  par(mar = c(2, 4, 4, 2))
   chart.Histogram(R[!R[, "Strategy Based"] == 0,"Strategy Based",drop=F],breaks=100,
                   main = "Strategy Based Returns Distribution",
                   methods = c("add.density", "add.normal","add.centered", "add.rug", "add.risk"))
   chart.Histogram(R[,"Y Series",drop=F], breaks=100,
                   main = "Y Series Returns Distribution",
                   methods = c("add.density", "add.normal","add.centered", "add.rug", "add.risk"))
+  par(mar = c(5, 4, 4, 2))
   chart.Histogram(R[,"X Series",drop=F], breaks=100,
                   main = "X Series Returns Distribution",
                   methods = c("add.density", "add.normal","add.centered", "add.rug", "add.risk"))
 
-  layout(matrix(c(1, 2)), heights = c(2, 2), widths = 1)
-  par(mar = c(3, 4, 4, 3))
+  layout(matrix(c(1, 2, 3)), heights = c(2, 2, 2), widths = 1)
+  par(mar = c(2, 4, 4, 2))
   chart.RiskReturnScatter(R, Rf=.02/12, main = "Risk & Return Scatter", colorset = bluefocus)
   chart.Scatter(performanceReport$trade.details$trade.days, performanceReport$trade.details$returns,
                 main = "Holding Days & Return Scatter", ylab = "Returns", xlab = "Holding Days")
-
+  par(mar = c(5, 4, 4, 2))
+  chart.VaRSensitivity(R)
   dev.off()
 
 
@@ -75,12 +81,21 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   library(mailR)
   from = "ivan@growingdata.com.au"
   subject = "AutoPairTrading - Performance Evaluation Report"
-  msg = "table"
+  msg = paste0("<h3>AutoPairTrading Model Notification - ", Sys.Date(), "</h3>",
+               "<h4>Trading Activities:</h4>",
+               print(xtable(performanceReport$trade.details), type = "html"),
+               "<br>",
+               "<h4>Strategy Performance</h4>",
+               print(xtable(as.data.table(performanceReport$stats.summary)), type = "html"),
+               "<br>",
+               "<p>For more details, please see attached <b>PerformanceEvaluation.pdf</b></p>"
+  )
   tryCatch({
     send.mail(from = "ivan@growingdata.com.au",
               to = to,
               subject = subject,
               body = msg,
+              html = TRUE,
               smtp = list(host.name = "smtp.gmail.com", port = 465, user.name = "ivan@growingdata.com.au", passwd = "Kalmanfilter123", ssl = TRUE),
               authenticate = TRUE,
               attach.files = path,
