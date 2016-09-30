@@ -75,8 +75,7 @@ plot(dt.summary$real.capital, type = \"l\")
 
 # 12. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
-basic.report
-
+performanceEvaluationEmail(basic.report)
 
 # 13. WIP -----------------------------------------------------------------
 # 1. Walkforward testing

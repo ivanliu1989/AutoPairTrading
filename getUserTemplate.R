@@ -2,7 +2,6 @@
 # 0. Env setup ------------------------------------------------------------
 rm(list = ls()); gc()
 library(testthat)
-library(TTR)
 library(AutoPairTrading)
 
 
@@ -65,8 +64,7 @@ plot(dt.summary$real.capital, type = "l")
 
 # 12. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
-basic.report
-
+performanceEvaluationEmail(basic.report, to = c("catwang89@gmail.com", "ivan.liuyanfeng@gmail.com"))
 
 # 13. WIP -----------------------------------------------------------------
 # 1. Walkforward testing

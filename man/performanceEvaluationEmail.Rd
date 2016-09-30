@@ -4,12 +4,15 @@
 \alias{performanceEvaluationEmail}
 \title{Generate a pdf report and email users}
 \usage{
-performanceEvaluationEmail(performanceReport, to)
+performanceEvaluationEmail(performanceReport,
+  to = c("ivan.liuyanfeng@gmail.com"), path = "PerformanceEvaluation.pdf")
 }
 \arguments{
 \item{performanceReport}{an object returned from \code{performanceReport}}
 
 \item{to}{a list of email addresses of report receivers}
+
+\item{path}{report path}
 }
 \description{
 Generate a pdf report and email users

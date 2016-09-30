@@ -55,7 +55,7 @@ performanceReport <- function(dt.summary){
   res <- list(
     trade.summary = dt.summary,
     trade.details = trade.details,
-    avg.holdingdays = avg.holdingdays,
+    stats.summary = list(avg.holdingdays = avg.holdingdays,
     avg.returns = avg.returns,
     tot.returns = tot.returns,
     tot.tradingdays = tot.tradingdays,
@@ -65,7 +65,7 @@ performanceReport <- function(dt.summary){
     Beta = NULL,
     Volatility = NULL,
     Max.Drawdown = NULL,
-    benchmark.ret = benchmark.ret
+    benchmark.ret = benchmark.ret)
   )
   return(res)
 }
