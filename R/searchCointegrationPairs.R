@@ -10,6 +10,13 @@
 #' @param trainPeriod number of points used to train cointegrations
 #'
 #' @seealso \link{JohansenCointegrationTest}
+#' @seealso \link{AugmentedDickeyFullerTest}
+#'
+#' @examples
+#' data("sp500")
+#' datasets <- sp500[,sample(1:500, 100)]
+#' searchCointegratedPairs(datasets, path = "GoodIntegratedPairs.pdf",
+#' to = c("ivan.liuyanfeng@gmail.com"),testPeriod = 63, trainPeriod = 252)
 #'
 #' @import urca
 #' @import tseries

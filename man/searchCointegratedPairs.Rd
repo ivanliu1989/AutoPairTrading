@@ -22,7 +22,16 @@ searchCointegratedPairs(dataset, path = "GoodIntegratedPairs.pdf",
 Conduct the Johansen procedure and ADF test on all combination of pairs to find potential integrated pairs
 Conduct the out of sample tests on all pairs to test the consistencies of cointegrations
 }
+\examples{
+data("sp500")
+datasets <- sp500[,sample(1:500, 100)]
+searchCointegratedPairs(datasets, path = "GoodIntegratedPairs.pdf",
+to = c("ivan.liuyanfeng@gmail.com"),testPeriod = 63, trainPeriod = 252)
+
+}
 \seealso{
 \link{JohansenCointegrationTest}
+
+\link{AugmentedDickeyFullerTest}
 }
 
