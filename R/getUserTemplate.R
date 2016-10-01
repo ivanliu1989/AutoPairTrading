@@ -78,7 +78,15 @@ plot(dt.summary$real.capital, type = \"l\")
 basic.report <- performanceReport(dt.summary)
 performanceEvaluationEmail(basic.report, c(\"ivan.liuyanfeng@gmail.com\"))
 
-# 13. WIP -----------------------------------------------------------------
+# 13. Searching Good Integrated Pairs -------------------------------------
+data(\"sp500\")
+datasets <- sp500[,sample(1:500, 100)]
+searchCointegratedPairs(datasets, path = \"GoodIntegratedPairs.pdf\",
+                        to = c(\"ivan.liuyanfeng@gmail.com\", \"ivan@growingdata.com.au\"),
+                        testPeriod = 63, trainPeriod = 252)
+
+
+# 14. WIP -----------------------------------------------------------------
 # 1. Walkforward testing
 # 2. Dynamic HalfLife
 # 3. KalmanFilter as an alternative to update Hedge Ratio

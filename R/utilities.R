@@ -204,3 +204,20 @@ getPriceRatio <- function(y, x, log = TRUE, spread = FALSE){
 
   return(p_ratio)
 }
+
+
+#' Get an Index of Current T-series
+#'
+#' Divide each column by the first non-NA value to get an index of 1 for input time-series
+#'
+#' @param x time series
+#'
+#' @return A \code{vector} of indexed time-series
+#'
+#' @export
+indexation <- function(x) {
+  # Divide each column by the first non-NA value
+  # (There may already be a function to do that.)
+  coredata(x) <- t(t(coredata(x)) / apply(coredata(x),2,function(u){ c(u[!is.na(u)&u!=0],NA)[1] }))
+  return(x)
+}

@@ -33,33 +33,3 @@ JohansenCointegrationTest <- function(x, type = "trace", ecdet = "none", K = 2){
 }
 
 
-#' Search Cointegrated Pairs
-#'
-#' Conducts the Johansen procedure and ADF test on all combination of pairs to find potential integrated pairs
-#'
-#' @param data Data matrix including all serires
-#'
-#' @seealso \link{JohansenCointegrationTest}
-#'
-#' @import urca
-#' @export
-findCointegratedPairs <- function(data){
-  # pvalue_jc = matrix()
-  # pvalue_adf = matrix()
-  # keys = index(data)
-  # pairs = matrix()
-  for(i in 1:n){
-    for(j in (i+1):n){
-      S1 = data[,i]
-      S2 = data[,j]
-      jc.test <- JohansenCointegrationTest(data[,c(i,j)])
-      adf.test <- AugmentedDickeyFullerTest(S1/S2)
-      if(jc.test$signif <= 5 | adf.test$signif <= 5){
-        cat("\nFind potential cointegrated pairs!")
-        cat(paste0("\nPairs: ", names(data)[i], " vs ", names(data)[j]))
-        cat(paste0("\njc.test: ", jc.test$signif, " | adf.test:", adf.test$signif))
-      }
-    }
-  }
-}
-

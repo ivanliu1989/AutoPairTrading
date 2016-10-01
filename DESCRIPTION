@@ -17,7 +17,8 @@ Imports: quantmod,
     FGN,
     urca,
     ggplot2,
-    mailR
+    mailR,
+    tseries
 Suggests: knitr,
     rmarkdown,
     fBasics

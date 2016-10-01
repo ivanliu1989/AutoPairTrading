@@ -21,3 +21,14 @@
 #' }
 #' @source \url{https://finance.yahoo.com/quote/CADUSD=X?p=CADUSD=X}
 "CADUSD"
+
+#' Prices of S&P 500.
+#'
+#' Prices of S&P 500 from 2010-01-01 to 2014-01-31.
+#'
+#' @format A xts, zoo matrix with 500 stocks in S&P from 2010-01-01 to 2014-01-31:
+#' \describe{
+#'   \item{AAPL}{price, in US dollars}
+#'   ...
+#' }
+"sp500"
