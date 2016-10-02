@@ -5,6 +5,7 @@
 #' @param performanceReport an object returned from \code{performanceReport}
 #' @param to a list of email addresses of report receivers
 #' @param path report path
+#' @param message additional message in email title
 #'
 #' @seealso \link{performanceReport}
 #'
@@ -13,7 +14,7 @@
 #' @import mailR
 #' @import data.table
 performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfeng@gmail.com"),
-                                       path = "PerformanceEvaluation.pdf"){
+                                       path = "PerformanceEvaluation.pdf", message = NULL){
   library(xtable)
   library(data.table)
 
@@ -82,6 +83,7 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   from = "ivan@growingdata.com.au"
   subject = "AutoPairTrading - Performance Evaluation Report"
   msg = paste0("<h3>AutoPairTrading Model Notification - ", Sys.Date(), "</h3>",
+               "<h4>", message, "</h4>",
                "<h4>Trading Activities:</h4>",
                print(xtable(performanceReport$trade.details), type = "html"),
                "<br>",

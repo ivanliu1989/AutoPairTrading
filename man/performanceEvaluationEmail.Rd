@@ -5,7 +5,8 @@
 \title{Generate a pdf report and email users}
 \usage{
 performanceEvaluationEmail(performanceReport,
-  to = c("ivan.liuyanfeng@gmail.com"), path = "PerformanceEvaluation.pdf")
+  to = c("ivan.liuyanfeng@gmail.com"), path = "PerformanceEvaluation.pdf",
+  message = NULL)
 }
 \arguments{
 \item{performanceReport}{an object returned from \code{performanceReport}}
@@ -13,6 +14,8 @@ performanceEvaluationEmail(performanceReport,
 \item{to}{a list of email addresses of report receivers}
 
 \item{path}{report path}
+
+\item{message}{additional message in email title}
 }
 \description{
 Generate a pdf report and email users

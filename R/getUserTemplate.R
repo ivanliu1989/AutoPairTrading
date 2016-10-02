@@ -18,8 +18,11 @@ library(TTR)
 
 
 # 1. Get Y, X and Price.Ratio ---------------------------------------------
-y = AutoPairTrading::AUDUSD
-x = AutoPairTrading::CADUSD
+pair <- na.omit(merge(AUDUSD, CADUSD))
+tscale <- \"2014-01-01/2016-10-01\"
+pair <- pair[tscale]
+y = pair[,1]
+x = pair[,2]
 price.ratio <- getPriceRatio(y, x, FALSE)
 
 
@@ -62,50 +65,52 @@ BBbands <- BollingerBands(price.ratio, half.life, 2)
 
 
 # 10. Strategy creation ---------------------------------------------------
-# zc.ma
-# zc
+mr <- zc.ma
+# Momentum indicators
+momRSI.y <- momentum.RSI(y, round(half.life/2))
+momRSI.x <- momentum.RSI(x, round(half.life/2))
+momRSI <- abs(zscores(na.omit(momRSI.y - momRSI.x))) # RSI Variance
+momMACD.y <- momentum.MACD(y)
+momMACD.x <- momentum.MACD(x)
+momMACD <- abs(zscores(na.omit(momMACD.y$longshort - momMACD.x$longshort))) # MACD Variance
+momCrossover.y <- momentum.Crossover(y)
+momCrossover.x <- momentum.Crossover(x)
+momCrossover <- abs(zscores(na.omit((momCrossover.y$hamming.Dist * momCrossover.y$spearman * momCrossover.y$thickness) -
+(momCrossover.x$hamming.Dist * momCrossover.x$spearman * momCrossover.x$thickness)))) # Crossover Variance
+# Aggregate strategies
+strategies <- na.omit(merge(mr, momRSI, momMACD, momCrossover))
+strategies$momentum <- (strategies[, 2] + strategies[, 3] + strategies[, 4])/3
 
+chart.TimeSeries(cbind(strategies, -1, 1), legend.loc = \"topleft\")
+chart.TimeSeries(strategies[, c(1,5)], legend.loc = \"topleft\")
+
+strategies$final <- strategies[,1] * 0.6 + sign(strategies[,1]) * strategies$momentum * 0.4
+# Strategies with momentum
+strategies <- na.omit(merge(y, x, strategies$final))
 
 # 11. Back Testing --------------------------------------------------------
-context <- InitializeContext(y, x, capital = 1e5, window = 20, lookback = 250, brokerage = 0.001, stoploss = 0.1)
-dt.summary <- BackTesting(y, x, context, zc.ma, rep(-1, length(x)), rep(1, length(x)), rep(0, length(x))) # zscore (moving average)
-dt.summary <- BackTesting(y, x, context, zc, rep(-1, length(x)), rep(1, length(x)), rep(0, length(x))) # zscore
-dt.summary <- BackTesting(y, x, context, BBbands$spread, BBbands$BBlow, BBbands$BBhigh, rep(0, length(x))) # BB bands
-plot(dt.summary$real.capital, type = \"l\")
+# Strategies of simple mean reversion
+# strategies <- na.omit(merge(y, x, zc.ma))
+context <- InitializeContext(strategies$y, strategies$x, capital = 1e5, window = 20, lookback = 250, brokerage = 0.001, stoploss = 0.1)
+dt.summary <- BackTesting(strategies[,1], strategies[,2], context, strategies[,3], rep(-1, nrow(strategies)),
+rep(1, nrow(strategies)), rep(0, nrow(strategies)))
 
 
 # 12. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
-performanceEvaluationEmail(basic.report, c(\"ivan.liuyanfeng@gmail.com\"))
+msg = c(\"Simple Mean Reversion (Normal Zscore)\",
+\"Simple Mean Reversion (Moving Average Zscore)\",
+\"Momentum & Mean Reversion Ensemble (40 to 60)\")
+performanceEvaluationEmail(basic.report, c(\"ivan.liuyanfeng@gmail.com\"), message = msg[1])
+
 
 # 13. Searching Good Integrated Pairs -------------------------------------
 data(\"sp500\")
-datasets <- sp500[,sample(1:500, 100)]
+datasets <- sp500[,1:100]
 searchCointegratedPairs(datasets, path = \"GoodIntegratedPairs.pdf\",
                         to = c(\"ivan.liuyanfeng@gmail.com\", \"ivan@growingdata.com.au\"),
                         testPeriod = 63, trainPeriod = 252)
 
-
-# 14. WIP -----------------------------------------------------------------
-# 1. Walkforward testing
-# 2. Dynamic HalfLife
-# 3. KalmanFilter as an alternative to update Hedge Ratio
-# 4. Implement more complicated Strategy Creation
-#    4.1 Interest Rates
-#    4.2 Commodity
-#    4.3 Partner countries
-#    4.4 VIR
-#    4.5 Sentiment
-#    4.6 Machine learning scoring
-#    4.7 etc.
-# 5. Dashboard of Strategy Performance
-# 6. Detailed Statistics Report
-# 7. Implement Stop-Loss & Minimum holding days
-# 8. Allow Multi-entry & Multi-exit
-# 9. Replace Close-price with Bid/Bet from IB API for Long/Short
-# 10. Commisions Calculator & Expected Returns Optimisation
-# 11. Incorporate momentum signals
-# 12. https://github.com/artyyouth/r-quant
 ")
 
   sink()
