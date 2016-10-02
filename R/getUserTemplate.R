@@ -86,12 +86,12 @@ chart.TimeSeries(strategies[, c(1,5)], legend.loc = \"topleft\")
 
 strategies$final <- strategies[,1] * 0.6 + sign(strategies[,1]) * strategies$momentum * 0.4
 # Strategies with momentum
-strategies <- na.omit(merge(y, x, strategies$final))
+strategies <- na.omit(merge(y, x, lag(strategies$final)))
 
 # 11. Back Testing --------------------------------------------------------
 # Strategies of simple mean reversion
-# strategies <- na.omit(merge(y, x, zc.ma))
-context <- InitializeContext(strategies$y, strategies$x, capital = 1e5, window = 20, lookback = 250, brokerage = 0.001, stoploss = 0.1)
+# strategies <- na.omit(merge(y, x, lag(zc.ma)))
+context <- InitializeContext(strategies[,1], strategies[,2], capital = 1e5, window = 20, lookback = 250, brokerage = 0.001, stoploss = 0.1)
 dt.summary <- BackTesting(strategies[,1], strategies[,2], context, strategies[,3], rep(-1, nrow(strategies)),
 rep(1, nrow(strategies)), rep(0, nrow(strategies)))
 
