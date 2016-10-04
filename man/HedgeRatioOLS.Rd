@@ -19,6 +19,15 @@ A \code{list} of hedge ratio (beta, risk) and alpha (risk free profits)
 \description{
 Calculate Hedge Ratio by using OLS
 }
+\details{
+alpha < 0 too little returns based on the risks
+
+alpha = 0 adequate returns for the risks taken
+
+alpha > 0 excess returns to the assumed risks
+
+beta correlated relative volatile
+}
 \examples{
 getFX("AUD/USD")
 getFX("CAD/USD")

@@ -192,7 +192,11 @@ setDataTable <- function(dt){
 #'
 #' @export
 getPriceRatio <- function(y, x, log = TRUE, spread = FALSE){
-
+  if(!class(y) == "numeric"){
+    p = na.omit(merge(y, x))
+    y = p[,1]
+    x = p[,2]
+  }
   if(spread){
     p_ratio <- y-x
   }else{
@@ -220,4 +224,43 @@ indexation <- function(x) {
   # (There may already be a function to do that.)
   coredata(x) <- t(t(coredata(x)) / apply(coredata(x),2,function(u){ c(u[!is.na(u)&u!=0],NA)[1] }))
   return(x)
+}
+
+
+#' Calculate Forward FX
+#'
+#' Calculate forward FX by using Covered Interest Rate Parity formula
+#'
+#' @param If foreign Interest Rates
+#' @param Id domestic Interest Rates
+#' @param SFX Spot FX prices
+#'
+#' @return A \code{list} of forward FX and their growth rates
+#'
+#' @export
+CoInterestRateParity <- function(If, Id, SFX){
+  datasets <- merge(If, Id, SFX)
+  FFX = datasets[,3] * ((1 + datasets[,1]) / (1 + datasets[,2]))
+  Gwt = ((1 + datasets[,1]) / (1 + datasets[,2]))
+  return(list(
+    FFX = FFX,
+    Gwt = Gwt
+  ))
+}
+
+
+#' Get the slope of a vector of numbers
+#'
+#' Get the slope of a vector of numbers
+#'
+#' @param y a vector of numbers
+#'
+#' @return A \code{numer} of slope value
+#'
+#' @export
+getSlope = function(y){
+  dt = data.frame(y = as.vector(y), x = 1:length(y))
+  fit <- lm(y~., dt)
+  slope = as.numeric(coef(fit)[2])
+  return(slope)
 }
