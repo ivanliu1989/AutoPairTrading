@@ -183,7 +183,7 @@ searchCointegratedPairs <- function(dataset, path = "GoodIntegratedPairs.pdf", t
   subject = "AutoPairTrading - Search Cointegration Report"
   msg = paste0("<h3>AutoPairTrading Cointegration Search Notification - ", Sys.Date(), "</h3>",
                paste0("<h4>Found ", length(rscore[,1]), " good pairs!</h4>"),
-               paste0("<p>Searched ", nrStocks, " unique series and ", nrStocks^2/2, " pairs in total.</p>"),
+               paste0("<p>Searched ", nrStocks, " unique series and ", round(nrStocks^2/2), " pairs in total.</p>"),
                paste0("<p>Following ", length(rscore[,1]), " have been found as good pairs in terms of their Johansen & ADF scores.</p>"),
                print(xtable(report.dt), type = "html"),
                "<br>",

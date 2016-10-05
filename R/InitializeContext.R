@@ -19,7 +19,7 @@
 #' context
 #'
 #' @export
-InitializeContext <- function(Symbol.Y, Symbol.X, capital = 1e5, window = 20, lookback = 250, brokerage = 0.02, stoploss = 0.1){
+InitializeContext <- function(Symbol.Y, Symbol.X, capital = 1e5, window = 20, lookback = 250, brokerage = 0.02, stoploss = 0.1, half.life){
   lookback <- min(lookback, length(Symbol.Y))
   context <- list(
     y = Symbol.Y[(length(Symbol.Y)-lookback+1):length(Symbol.Y)],
@@ -30,7 +30,8 @@ InitializeContext <- function(Symbol.Y, Symbol.X, capital = 1e5, window = 20, lo
     window = window,
     lookback = lookback,
     brokerage = brokerage,
-    stoploss = stoploss
+    stoploss = stoploss,
+    half.life = half.life
   )
   return(context)
 }

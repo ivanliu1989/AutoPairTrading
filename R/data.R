@@ -65,3 +65,16 @@
 #'   ...
 #' }
 "USAYC"
+
+
+#' Sample Data for Modeling
+#'
+#' All required features including AUDUSD, CADUSD and Bonds Ratios for modeling
+#'
+#' @format A xts, zoo matrix with 618 points from 2014-1-02 to 2016-07-22:
+#' \describe{
+#'   \item{price.ratio}{price ratios between pairs}
+#'   ...
+#' }
+"SampleUniverse"
+

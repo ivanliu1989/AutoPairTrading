@@ -5,7 +5,7 @@
 \title{Initialize Trading Context}
 \usage{
 InitializeContext(Symbol.Y, Symbol.X, capital = 1e+05, window = 20,
-  lookback = 250, brokerage = 0.02, stoploss = 0.1)
+  lookback = 250, brokerage = 0.02, stoploss = 0.1, half.life)
 }
 \arguments{
 \item{Symbol.Y}{Ticker symbol for series Y (long)}
