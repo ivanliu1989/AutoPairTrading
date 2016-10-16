@@ -1,3 +1,34 @@
+#' Rolling walk forward testing
+#'
+#' A function for strategy testing based on walk forward methodology
+#'
+#' @param context trading context
+#' @param datasets a dataset to be used for modeling
+#' @param nEval length of periods used for training
+#' @param strategyFunc customised function to calculate indicator from \code{datasets}
+#' @param strategyParam parameters used in \code{strategyFunc}
+#' @param longTrigger a number of thresholds for going long
+#' @param shortTrigger a number of thresholds for going short
+#' @param exitTrigger a trigger to exit current positions
+#' @param k.fold total number of rounds of rolling testing
+#'
+#' @return A \code{list} of \code{data.frame} with trading activities
+#'
+#' @seealso \link{getUserTemplate}
+#' @seealso \link{BackTestingRealTime}
+#'
+#' @export
+WalkForwardTesting <- function(func = NULL, datasets, ... = ..., k.fold = 10){
+  if(is.null(func)) stop("Please pass your testing function")
+  order.books <- list()
+  for(i in 1:k.fold){
+    datasetsTmp <- datasets[sample(1:nrow(datasets), round(nrow(datasets)/k.fold))]
+    order.books[[i]] <- func(datasets = datasetsTmp, ... = ...)
+  }
+  return(order.books)
+}
+
+
 #' Rolling Walk Forward Analysis
 #'
 #' A wrapper for apply.paramset() and applyStrategy(), implementing a Rolling Walk Forward Analysis (WFA).

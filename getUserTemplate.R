@@ -53,7 +53,7 @@ context <- InitializeContext(SampleUniverse$AUD.USD, SampleUniverse$CAD.USD, cap
 lookback = 252, brokerage = 0.001, stoploss = 0.1, half.life = half.life)
 dt.summary <- BackTestingRealTime(context, SampleUniverse, nEval = 350)
 # dt.summary <- BackTestingRealTimeBenchmark(context, SampleUniverse, nEval = 350)
-
+order.books <- WalkForwardTesting(BackTestingRealTime, context = context, datasets = SampleUniverse, nEval = 350)
 
 # 10. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
