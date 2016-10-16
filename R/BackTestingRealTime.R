@@ -48,8 +48,9 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
     }
 
     # calculate hedge ratio
-    hedgeRatio <- HedgeRatioOLS(dt[(nrow(dt)-half.life):nrow(dt),2],
-                                dt[(nrow(dt)-half.life):nrow(dt),3])
+    hedgeRatio <- HedgeRatioOLS(dt[max((nrow(dt)-half.life),1):nrow(dt),2],
+                                dt[max((nrow(dt)-half.life),1):nrow(dt),3])
+
 
     if(d == enddat){
       # Update numbers
@@ -163,22 +164,24 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       dt.summary$trade[i] = "Go Short"
 
     }else{
+      if(i > 1){
+        dt.summary$capital[i] = dt.summary$capital[i-1]
+        dt.summary$y.holdings[i] = dt.summary$y.holdings[i-1]
+        dt.summary$x.holdings[i] = dt.summary$x.holdings[i-1]
+        dt.summary$y.shares[i] = dt.summary$y.shares[i-1]
+        dt.summary$x.shares[i] = dt.summary$x.shares[i-1]
+        dt.summary$long.pos[i] = dt.summary$long.pos[i-1]
+        dt.summary$short.pos[i] = dt.summary$short.pos[i-1]
+        # cat("\nWhat!!!!!!!!!!!!!!!!!!!!!!!")
+        dt.summary$capital[i+1] = dt.summary$capital[i]
+        dt.summary$y.holdings[i+1] = dt.summary$y.holdings[i]
+        dt.summary$x.holdings[i+1] = dt.summary$x.holdings[i]
+        dt.summary$y.shares[i+1] = dt.summary$y.shares[i]
+        dt.summary$x.shares[i+1] = dt.summary$x.shares[i]
+        dt.summary$long.pos[i+1] = dt.summary$long.pos[i]
+        dt.summary$short.pos[i+1] = dt.summary$short.pos[i]
+      }
 
-      dt.summary$capital[i] = dt.summary$capital[i-1]
-      dt.summary$y.holdings[i] = dt.summary$y.holdings[i-1]
-      dt.summary$x.holdings[i] = dt.summary$x.holdings[i-1]
-      dt.summary$y.shares[i] = dt.summary$y.shares[i-1]
-      dt.summary$x.shares[i] = dt.summary$x.shares[i-1]
-      dt.summary$long.pos[i] = dt.summary$long.pos[i-1]
-      dt.summary$short.pos[i] = dt.summary$short.pos[i-1]
-      # cat("\nWhat!!!!!!!!!!!!!!!!!!!!!!!")
-      dt.summary$capital[i+1] = dt.summary$capital[i]
-      dt.summary$y.holdings[i+1] = dt.summary$y.holdings[i]
-      dt.summary$x.holdings[i+1] = dt.summary$x.holdings[i]
-      dt.summary$y.shares[i+1] = dt.summary$y.shares[i]
-      dt.summary$x.shares[i+1] = dt.summary$x.shares[i]
-      dt.summary$long.pos[i+1] = dt.summary$long.pos[i]
-      dt.summary$short.pos[i+1] = dt.summary$short.pos[i]
     }
 
     dt.summary$in_short[i] = in_short
@@ -241,8 +244,9 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
     indicator <- tail(zc,1)
 
     # calculate hedge ratio
-    hedgeRatio <- HedgeRatioOLS(dt[(nrow(dt)-half.life):nrow(dt),2],
-                                dt[(nrow(dt)-half.life):nrow(dt),3])
+    hedgeRatio <- HedgeRatioOLS(dt[max((nrow(dt)-half.life),1):nrow(dt),2],
+                                dt[max((nrow(dt)-half.life),1):nrow(dt),3])
+
 
     if(d == enddat){
       # Update numbers
@@ -356,22 +360,23 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       dt.summary$trade[i] = "Go Short"
 
     }else{
-
-      dt.summary$capital[i] = dt.summary$capital[i-1]
-      dt.summary$y.holdings[i] = dt.summary$y.holdings[i-1]
-      dt.summary$x.holdings[i] = dt.summary$x.holdings[i-1]
-      dt.summary$y.shares[i] = dt.summary$y.shares[i-1]
-      dt.summary$x.shares[i] = dt.summary$x.shares[i-1]
-      dt.summary$long.pos[i] = dt.summary$long.pos[i-1]
-      dt.summary$short.pos[i] = dt.summary$short.pos[i-1]
-      # cat("\nWhat!!!!!!!!!!!!!!!!!!!!!!!")
-      dt.summary$capital[i+1] = dt.summary$capital[i]
-      dt.summary$y.holdings[i+1] = dt.summary$y.holdings[i]
-      dt.summary$x.holdings[i+1] = dt.summary$x.holdings[i]
-      dt.summary$y.shares[i+1] = dt.summary$y.shares[i]
-      dt.summary$x.shares[i+1] = dt.summary$x.shares[i]
-      dt.summary$long.pos[i+1] = dt.summary$long.pos[i]
-      dt.summary$short.pos[i+1] = dt.summary$short.pos[i]
+      if(i > 1){
+        dt.summary$capital[i] = dt.summary$capital[i-1]
+        dt.summary$y.holdings[i] = dt.summary$y.holdings[i-1]
+        dt.summary$x.holdings[i] = dt.summary$x.holdings[i-1]
+        dt.summary$y.shares[i] = dt.summary$y.shares[i-1]
+        dt.summary$x.shares[i] = dt.summary$x.shares[i-1]
+        dt.summary$long.pos[i] = dt.summary$long.pos[i-1]
+        dt.summary$short.pos[i] = dt.summary$short.pos[i-1]
+        # cat("\nWhat!!!!!!!!!!!!!!!!!!!!!!!")
+        dt.summary$capital[i+1] = dt.summary$capital[i]
+        dt.summary$y.holdings[i+1] = dt.summary$y.holdings[i]
+        dt.summary$x.holdings[i+1] = dt.summary$x.holdings[i]
+        dt.summary$y.shares[i+1] = dt.summary$y.shares[i]
+        dt.summary$x.shares[i+1] = dt.summary$x.shares[i]
+        dt.summary$long.pos[i+1] = dt.summary$long.pos[i]
+        dt.summary$short.pos[i+1] = dt.summary$short.pos[i]
+      }
     }
 
     dt.summary$in_short[i] = in_short

@@ -1,4 +1,5 @@
 
+
 # 0. Env setup ------------------------------------------------------------
 rm(list = ls()); gc()
 library(testthat)
@@ -49,9 +50,9 @@ head(SampleUniverse)
 
 # 9. Back Testing ---------------------------------------------------------
 context <- InitializeContext(SampleUniverse$AUD.USD, SampleUniverse$CAD.USD, capital = 1e6, window = 20,
-                             lookback = 252, brokerage = 0.001, stoploss = 0.1, half.life = half.life)
-# dt.summary <- BackTestingRealTime(context, SampleUniverse, nEval = 350)
-dt.summary <- BackTestingRealTimeBenchmark(context, SampleUniverse, nEval = 350)
+lookback = 252, brokerage = 0.001, stoploss = 0.1, half.life = half.life)
+dt.summary <- BackTestingRealTime(context, SampleUniverse, nEval = 350)
+# dt.summary <- BackTestingRealTimeBenchmark(context, SampleUniverse, nEval = 350)
 
 # 10. Performance Analytics -----------------------------------------------
 basic.report <- performanceReport(dt.summary)
@@ -60,7 +61,7 @@ performanceEvaluationEmail(basic.report, c("ivan.liuyanfeng@gmail.com"), message
 
 # 11. Searching Good Integrated Pairs -------------------------------------
 data("sp500")
-datasets <- sp500[,c(50:80)]
+datasets <- sp500
 searchCointegratedPairs(datasets, path = "GoodIntegratedPairs.pdf",
 to = c("ivan.liuyanfeng@gmail.com", "ivan@growingdata.com.au"),
 testPeriod = 63, trainPeriod = 252)
