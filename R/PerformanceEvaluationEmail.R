@@ -83,13 +83,16 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   from = "ivan@growingdata.com.au"
   subject = "AutoPairTrading - Performance Evaluation Report"
   performanceReport$trade.details$Dates <- as.character(performanceReport$trade.details$Dates)
+
+  perfTable = t(as.data.table(performanceReport$stats.summary))
+  colnames(perfTable) = c("Values")
   msg = paste0("<h3>AutoPairTrading Model Notification - ", Sys.Date(), "</h3>",
                "<h4>", message, "</h4>",
                "<h4>Trading Activities:</h4>",
                print(xtable(performanceReport$trade.details), type = "html"),
                "<br>",
                "<h4>Strategy Performance</h4>",
-               print(xtable(as.data.table(performanceReport$stats.summary)), type = "html"),
+               print(xtable(perfTable), type = "html"),
                "<br>",
                "<p>For more details, please see attached <b>PerformanceEvaluation.pdf</b></p>"
   )

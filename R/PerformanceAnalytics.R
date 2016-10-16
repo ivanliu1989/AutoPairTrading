@@ -17,9 +17,15 @@ performanceReport <- function(dt.summary){
   # - distribution of returns per trade
   # - distribution of days holding
   ret <- dt.summary[dt.summary$in_short | dt.summary$in_long,]
+  Beta = mean(ret$beta)
+  Alpha = mean(ret$alpha)
+  Max.Drawdown = max(ret$real.capital) - min(ret$real.capital)
+  Max.Drawdown.Ratio = Max.Drawdown / max(ret$real.capital)
   ret <- ROC(ret$real.capital, n = 1, type = "discrete", na.pad = 0)
   APR <- round(prod(1+ret)**(252/length(ret)) - 1, 5)
   Sharpe <- round(sqrt(252)*mean(ret)/sd(ret), 5)
+  Volatility = sd(ret)
+
 
   trade.summary <- dt.summary[!dt.summary$trade == "NO Trade",]
   table(trade.summary$trade)
@@ -47,6 +53,9 @@ performanceReport <- function(dt.summary){
                          trade.short[,.(Dates, y.prices, x.prices, y.shares, x.shares, hedgeRatio, brokerage, trade, real.capital, returns, trade.days)])
   setorder(trade.details, Dates)
 
+  Volatility =
+  num.Txns <- nrow(trade.summary)
+  win.loss.ratio <- mean(trade.details$returns > 0)
   avg.holdingdays <- mean(trade.details$trade.days)
   avg.returns <- mean(trade.details$returns[-length(trade.details$returns)])
   tot.returns <- prod(trade.details$returns[-length(trade.details$returns)]+1)-1
@@ -61,10 +70,13 @@ performanceReport <- function(dt.summary){
     tot.tradingdays = tot.tradingdays,
     APR = APR,
     Sharpe = Sharpe,
-    Alpha = NULL,
-    Beta = NULL,
-    Volatility = NULL,
-    Max.Drawdown = NULL,
+    Alpha = Alpha,
+    Beta = Beta,
+    Volatility = Volatility,
+    Max.Drawdown = Max.Drawdown,
+    Max.Drawdown.Ratio = Max.Drawdown.Ratio,
+    Num.Txns = num.Txns,
+    Win.Loss.Ratio = win.loss.ratio,
     benchmark.ret = benchmark.ret)
   )
   return(res)
