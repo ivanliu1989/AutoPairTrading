@@ -4,28 +4,26 @@
 \alias{WalkForwardTesting}
 \title{Rolling walk forward testing}
 \usage{
-WalkForwardTesting(context, datasets, nEval = 500, longTrigger = -1,
-  shortTrigger = 1, exitTrigger = 0, strategyFunc = NULL,
-  strategyParam = 5, k.fold = 10)
+WalkForwardTesting(func = NULL, datasets, ... = ..., k.fold = 10)
 }
 \arguments{
-\item{context}{trading context}
-
 \item{datasets}{a dataset to be used for modeling}
 
+\item{k.fold}{total number of rounds of rolling testing}
+
+\item{context}{trading context}
+
 \item{nEval}{length of periods used for training}
+
+\item{strategyFunc}{customised function to calculate indicator from \code{datasets}}
+
+\item{strategyParam}{parameters used in \code{strategyFunc}}
 
 \item{longTrigger}{a number of thresholds for going long}
 
 \item{shortTrigger}{a number of thresholds for going short}
 
 \item{exitTrigger}{a trigger to exit current positions}
-
-\item{strategyFunc}{customised function to calculate indicator from \code{datasets}}
-
-\item{strategyParam}{parameters used in \code{strategyFunc}}
-
-\item{k.fold}{total number of rounds of rolling testing}
 }
 \value{
 A \code{list} of \code{data.frame} with trading activities
