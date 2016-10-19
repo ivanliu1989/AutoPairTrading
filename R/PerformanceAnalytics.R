@@ -29,8 +29,8 @@ performanceReport <- function(dt.summary){
 
   trade.summary <- dt.summary[!dt.summary$trade == "NO Trade",]
   table(trade.summary$trade)
-  benchmark.ret = mean(c((trade.summary$y.prices[length(trade.summary$y.prices)] - trade.summary$y.prices[1]) / trade.summary$y.prices[1],
-  (trade.summary$x.prices[length(trade.summary$x.prices)] - trade.summary$x.prices[1]) / trade.summary$x.prices[1])) - 0.02
+  benchmark.ret = mean(c((trade.summary$y.close[length(trade.summary$y.close)] - trade.summary$y.close[1]) / trade.summary$y.close[1],
+  (trade.summary$x.close[length(trade.summary$x.close)] - trade.summary$x.close[1]) / trade.summary$x.close[1])) - 0.02
 
   # short
   trade.short <- trade.summary[!trade.summary$trade == "Go Long",]
@@ -49,8 +49,8 @@ performanceReport <- function(dt.summary){
   trade.long <- trade.long[!trade == "Exit"]
 
   # All trades
-  trade.details <- rbind(trade.long[,.(Dates, y.prices, x.prices, y.shares, x.shares, hedgeRatio, brokerage, trade, real.capital, returns, trade.days)],
-                         trade.short[,.(Dates, y.prices, x.prices, y.shares, x.shares, hedgeRatio, brokerage, trade, real.capital, returns, trade.days)])
+  trade.details <- rbind(trade.long[,.(Dates, y.close,y.bid,y.ask, x.close, x.bid, x.ask, y.shares, x.shares, hedgeRatio, brokerage, trade, real.capital, returns, trade.days)],
+                         trade.short[,.(Dates, y.close,y.bid,y.ask, x.close, x.bid, x.ask, y.shares, x.shares, hedgeRatio, brokerage, trade, real.capital, returns, trade.days)])
   setorder(trade.details, Dates)
 
   Volatility =

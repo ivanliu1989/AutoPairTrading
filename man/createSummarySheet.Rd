@@ -4,14 +4,14 @@
 \alias{createSummarySheet}
 \title{Create a Summary Sheet for Backtesting}
 \usage{
-createSummarySheet(y, x, initial.capital)
+createSummarySheet(prices, initial.capital)
 }
 \arguments{
+\item{initial.capital}{initial capital}
+
 \item{y}{y series}
 
 \item{x}{x series}
-
-\item{initial.capital}{initial capital}
 }
 \value{
 A \code{data.frame}

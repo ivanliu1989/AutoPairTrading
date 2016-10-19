@@ -136,9 +136,8 @@ make_order_pct <- function(initial.capital, capital, holdings, prices, current.s
 #' @return A \code{data.frame}
 #'
 #' @export
-createSummarySheet <- function(y, x, initial.capital){
-  dt.summary <- as.data.frame(merge(y,x))
-  colnames(dt.summary) <- c("y.prices", "x.prices")
+createSummarySheet <- function(prices, initial.capital){
+  dt.summary <- as.data.frame(prices)
   dt.summary$in_short = FALSE
   dt.summary$in_long = FALSE
   dt.summary$capital = initial.capital

@@ -25,9 +25,14 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
   in_long = FALSE
   stdat = nrow(datasets) - lookback + 1
   enddat = nrow(datasets)
-  y = context$y
-  x = context$x
-  dt.summary <- createSummarySheet(y,x, context$capital)
+  y = datasets$y.close
+  y.bid = datasets$y.bid
+  y.ask = datasets$y.ask
+  x = datasets$x.close
+  x.bid = datasets$x.bid
+  x.ask = datasets$x.ask
+  prices <- merge(y, y.bid, y.ask, x, x.bid, x.ask)
+  dt.summary <- createSummarySheet(prices, context$capital)
   i = 0
 
   for(d in stdat:enddat){
@@ -54,13 +59,13 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
 
     if(d == enddat){
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], 0, brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], 0, brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], 0, brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], 0, brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
       dt.summary$x.shares[i] = x_order_update$shares
@@ -74,7 +79,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
 
     }else if((in_short & indicator < exitTrigger) | (in_long & indicator > exitTrigger)){
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], 0, brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], 0, brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -83,7 +88,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], 0, brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], 0, brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -108,7 +113,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], target_pct[1], brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.ask[i], dt.summary$y.shares[i], target_pct[1], brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -117,7 +122,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], target_pct[2], brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], target_pct[2], brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -141,7 +146,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], target_pct[1], brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], target_pct[1], brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -150,7 +155,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], target_pct[2], brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.ask[i], dt.summary$x.shares[i], target_pct[2], brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -191,7 +196,7 @@ BackTestingRealTime <- function(context, datasets, nEval = 500, longTrigger = -1
     dt.summary$alpha[i] = hedgeRatio$alpha
   }
 
-  dt.summary$real.capital <- dt.summary$y.prices * dt.summary$y.shares + dt.summary$x.prices * dt.summary$x.shares + dt.summary$capital
+  dt.summary$real.capital <- dt.summary$y.bid * dt.summary$y.shares + dt.summary$x.bid * dt.summary$x.shares + dt.summary$capital
 
   return(dt.summary)
 }
@@ -227,9 +232,14 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
   in_long = FALSE
   stdat = nrow(datasets) - lookback + 1
   enddat = nrow(datasets)
-  y = context$y
-  x = context$x
-  dt.summary <- createSummarySheet(y,x, context$capital)
+  y = datasets$y.close
+  y.bid = datasets$y.bid
+  y.ask = datasets$y.ask
+  x = datasets$x.close
+  x.bid = datasets$x.bid
+  x.ask = datasets$x.ask
+  prices <- merge(y, y.bid, y.ask, x, x.bid, x.ask)
+  dt.summary <- createSummarySheet(prices, context$capital)
   i = 0
 
   for(d in stdat:enddat){
@@ -250,13 +260,13 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
 
     if(d == enddat){
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], 0, brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], 0, brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
       dt.summary$y.shares[i] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], 0, brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], 0, brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
       dt.summary$x.shares[i] = x_order_update$shares
@@ -270,7 +280,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
 
     }else if((in_short & indicator < exitTrigger) | (in_long & indicator > exitTrigger)){
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], 0, brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], 0, brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -279,7 +289,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], 0, brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], 0, brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -304,7 +314,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], target_pct[1], brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.ask[i], dt.summary$y.shares[i], target_pct[1], brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -313,7 +323,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], target_pct[2], brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.bid[i], dt.summary$x.shares[i], target_pct[2], brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -337,7 +347,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       target_pct <- as.vector(computeHoldingsPct(y_target_shares,x_target_shares,y[i], x[i]))
 
       # Update numbers
-      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.prices[i], dt.summary$y.shares[i], target_pct[1], brokerage)
+      y_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$y.holdings[i], dt.summary$y.bid[i], dt.summary$y.shares[i], target_pct[1], brokerage)
       dt.summary$capital[i] = y_order_update$capital
       dt.summary$capital[i+1] = y_order_update$capital
       dt.summary$y.holdings[i] = y_order_update$holdings
@@ -346,7 +356,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
       dt.summary$y.shares[i+1] = y_order_update$shares
       dt.summary$brokerage[i] = as.numeric(dt.summary$brokerage[i]) + y_order_update$brokerage
 
-      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.prices[i], dt.summary$x.shares[i], target_pct[2], brokerage)
+      x_order_update <- make_order_pct(capital, dt.summary$capital[i], dt.summary$x.holdings[i], dt.summary$x.ask[i], dt.summary$x.shares[i], target_pct[2], brokerage)
       dt.summary$capital[i] = x_order_update$capital
       dt.summary$capital[i+1] = x_order_update$capital
       dt.summary$x.holdings[i] = x_order_update$holdings
@@ -386,7 +396,7 @@ BackTestingRealTimeBenchmark <- function(context, datasets, nEval = 500, longTri
     dt.summary$alpha[i] = hedgeRatio$alpha
   }
 
-  dt.summary$real.capital <- dt.summary$y.prices * dt.summary$y.shares + dt.summary$x.prices * dt.summary$x.shares + dt.summary$capital
+  dt.summary$real.capital <- dt.summary$y.bid * dt.summary$y.shares + dt.summary$x.bid * dt.summary$x.shares + dt.summary$capital
 
   return(dt.summary)
 }

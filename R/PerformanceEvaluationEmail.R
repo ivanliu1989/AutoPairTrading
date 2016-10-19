@@ -13,6 +13,7 @@
 #' @import xtable
 #' @import mailR
 #' @import data.table
+
 performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfeng@gmail.com"),
                                        path = "PerformanceEvaluation.pdf", message = NULL){
   library(xtable)
@@ -26,7 +27,7 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   pdf(path, useDingbats=FALSE, width=8, height=9)
 
   # 1. Performance plots ----------------------------------------------------
-  R <- ROC(full.trades[, c("real.capital", "y.prices", "x.prices")])[-1,]
+  R <- ROC(full.trades[, c("real.capital", "y.close", "x.close")])[-1,]
   colnames(R) <- c("Strategy Based", "Y Series", "X Series")
   charts.PerformanceSummary(R, main = "Strategy Performance Summary", Rf = 0.02, methods = "ModifiedVaR",
                             event.labels = T, wealth.index = T, colorset=bluefocus)
@@ -37,10 +38,10 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   layout(matrix(c(1, 2, 3)), heights = c(2, 1, 1.3), widths = 1)
   par(mar = c(1, 4, 4, 2))
   trade.points <- full.trades[!full.trades$trade == "NO Trade",]
-  chart.TimeSeries(full.trades[,c("y.prices", "x.prices")], event.lines = rownames(trade.points),
+  chart.TimeSeries(full.trades[,c("y.close", "x.close")], event.lines = rownames(trade.points),
                    event.labels = trade.points$trade, ylab = "X. Y Prices", colorset = bluefocus,
                    legend.loc = "topleft", xaxis = FALSE, main = "Convergence & Divergence")
-  zc <- zscores(getPriceRatio(full.trades$y.prices, full.trades$x.prices, FALSE))
+  zc <- zscores(getPriceRatio(full.trades$y.close, full.trades$x.close, FALSE))
   pratio <- data.frame(zscor = zc, low = -1, high = 1)
   rownames(pratio) <- rownames(full.trades)
   par(mar = c(1, 4, 0, 2))
@@ -48,7 +49,7 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
                    ylab = "ZScores Price Ratio", colorset = bluefocus,legend.loc = "topleft", main = NA)
 
   # 2.2 Alpha and Beta
-  risk.trades <- full.trades[, c("y.prices", "x.prices", "alpha", "beta")]
+  risk.trades <- full.trades[, c("y.close", "x.close", "alpha", "beta")]
   par(mar = c(5, 4, 0, 2))
   chart.Bar(risk.trades[,c("alpha", "beta")], colorset = bluefocus, legend.loc = "topleft",
             ylab = "Alpha & Beta", main = NA)
@@ -74,7 +75,7 @@ performanceEvaluationEmail <- function(performanceReport, to = c("ivan.liuyanfen
   chart.Scatter(performanceReport$trade.details$trade.days, performanceReport$trade.details$returns,
                 main = "Holding Days & Return Scatter", ylab = "Returns", xlab = "Holding Days")
   par(mar = c(5, 4, 4, 2))
-  chart.VaRSensitivity(R)
+  tryCatch({chart.VaRSensitivity(R)}, error = function(e){cat("Error!")})
   dev.off()
 
 

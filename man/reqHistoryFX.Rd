@@ -4,11 +4,11 @@
 \alias{reqHistoryFX}
 \title{Download FX Historical Data}
 \usage{
-reqHistoryFX(tws, duration = "10 Y", barsize = "1 day", Cur1 = "USD",
-  Cur2 = "CAD")
+reqHistoryFX(tws = NULL, duration = "10 Y", barsize = "1 day",
+  Cur1 = "USD", Cur2 = "CAD")
 }
 \arguments{
-\item{tws}{connection to current TWS account}
+\item{tws}{connection to current TWS account, if NULL, a new connection will be created within the function}
 
 \item{duration}{time span the request will cover}
 
@@ -25,8 +25,8 @@ A \code{list} of Bid, Ask and Bid_Ask prices
 Makes a request to the Interactive Brokers Trader Workstation (TWS), and returns an xts object containing the results of the request if successful.
 }
 \details{
-Legal barSize settings are technically ‘1 secs’,‘5 secs’,‘15 secs’, ‘30 mins’,‘1 min’,‘2 mins’, ‘3 mins’,‘5 mins’,‘15 mins’, ‘30 mins’,‘1 hour’,‘1 day’, ‘1 week’,‘1 month’,‘3 months’, and ‘1 year’. They must be specified exactly and there is no guarantee from the API that all will work for all securities or durations.
-The duration string must be of the form ‘n S’ where the last character may be any one of ‘S’ (seconds), ‘D’ (days), ‘W’ (weeks), ‘M’ (months), and ‘Y’ (year). At present the limit for years is 1.
+Legal barSize settings are technically '1 secs','5 secs','15 secs','30 mins','1 min','2 mins', '3 mins','5 mins','15 mins', '30 mins','1 hour','1 day', '1 week','1 month','3 months', and '1 year'. They must be specified exactly and there is no guarantee from the API that all will work for all securities or durations.
+The duration string must be of the form 'n S' where the last character may be any one of 'S' (seconds), 'D' (days), 'W' (weeks), 'M' (months), and 'Y' (year). At present the limit for years is 1.
 }
 \examples{
 library(IBrokers)
