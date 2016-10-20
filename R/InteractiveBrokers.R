@@ -31,7 +31,7 @@ reqHistoryFX <- function(tws = NULL, duration = "10 Y", barsize = "1 day", Cur1 
   ccy <- reqContractDetails(tws, twsCurrency(Cur1, Cur2))[[1]]$contract
 
   BIDASK <- reqHistoricalData(conn = tws, Contract = ccy, barSize = barsize,
-                              duration = duration, useRTH = "1", whatToShow='BID_ASK')
+                              duration = duration, useRTH = "1", whatToShow='MIDPOINT')
 
   BID <- reqHistoricalData(conn = tws, Contract = ccy, barSize = barsize,
                            duration = duration, useRTH = "1", whatToShow='BID')

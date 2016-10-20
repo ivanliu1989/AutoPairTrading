@@ -288,7 +288,7 @@ hedgeRatio
 
 # 8. Preparing the Universe data ------------------------------------------
 head(SampleUniverse)
-index(x.series) <- as.Date(index(y.series))
+index(y.series) <- as.Date(index(y.series))
 index(x.series) <- as.Date(index(x.series))
 index(price.ratio) <- as.Date(index(price.ratio))
 

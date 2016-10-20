@@ -15,14 +15,14 @@
 xgbRegSimulation <- function(idx, features, labels, pred, itr = 10){
   library(xgboost)
   # par(mfcol = c(3,2))
-  dpred <- xgb.DMatrix(pred)
+  dpred <- xgb.DMatrix(pred, missing = NaN)
 
   # predictions <- matrix(NA, nrow = itr, ncol = ncol(labels))
   predictions <- matrix(NA, nrow = itr*ncol(labels), ncol = 2)
   for(i in 1:ncol(labels)){
     # cat(paste0("\nLabel: ", i))
-    dtrain <- xgb.DMatrix(data.matrix(features[idx,]), label = labels[idx, i])
-    dtest <- xgb.DMatrix(data.matrix(features[-idx,]), label = labels[-idx, i])
+    dtrain <- xgb.DMatrix(data.matrix(features[idx,]), label = labels[idx, i], missing = NaN)
+    dtest <- xgb.DMatrix(data.matrix(features[-idx,]), label = labels[-idx, i], missing = NaN)
     watchlist = list(eval = dtest, train = dtrain)
     param <- list(max.depth = 5,
                   eta = 0.1,
