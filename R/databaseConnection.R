@@ -11,8 +11,29 @@
 #' res <- sqlFetch(conn, sqlquery1)
 #'
 #' @export
+#' @import
+#' RODBC
 sqlServerConnect <- function(){
+  library(RODBC)
   conn <- odbcConnect("growingdata", "terence","6Da7ad72!")
   return(conn)
 }
 
+
+#' Quandl API Connection
+#'
+#' Connect to Quandl API
+#'
+#' @return NULL
+#'
+#' @examples
+#' QuandlConnect()
+#' mydata = Quandl.datatable("ZACKS/FC", ticker="AAPL")
+#'
+#' @export
+#' @import
+#' Quandl
+QuandlConnect <- function(){
+  library(Quandl)
+  Quandl.api_key("H83fxGxUfi-GBx1JyDx8")
+}
