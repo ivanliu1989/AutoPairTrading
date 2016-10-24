@@ -204,7 +204,7 @@ getPriceRatio <- function(y, x, log = TRUE, spread = FALSE){
     p_ratio <- na.omit(p_ratio)
     if(log) p_ratio <- log(p_ratio)
   }
-
+  colnames(p_ratio) <- "price.ratio"
   return(p_ratio)
 }
 
